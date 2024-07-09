@@ -21,7 +21,7 @@ class TrackFactory extends Factory
             'uuid' => Str::uuid(),
             'title' => $this->faker->sentence(3),
             'artist' => $this->faker->name(),
-            'image' => 'tracks/images/test.svg',
+            'image' => 'tracks/musics/test.svg',
             'music' => 'tracks/images/test.wav',
             'display' => $this->faker->boolean(90),
             'play_count' => $this->faker->numberBetween(0, 2000),
