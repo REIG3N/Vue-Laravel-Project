@@ -20,7 +20,7 @@ class TrackController extends Controller
 
     public function create()
     {
-        dd('create');              
+        return Inertia::render('Track/Create');
     }
 
     public function edit()
@@ -33,6 +33,8 @@ class TrackController extends Controller
 
     public function store(Request $request)
     {
+        sleep(5);
+        return redirect()->back();
     }
 
     public function update(Request $request)
