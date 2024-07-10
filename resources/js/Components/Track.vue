@@ -1,35 +1,39 @@
+<template>
+  <div class="max-w-sm rounded shadow-lg">
+    <div class="w-full">
+      <img :src="`storage/${track.image}`" />
+    </div>
+    <div class="px-6 py-4">
+      <div class="font-bold text-xl mb-2">{{ track.title }}</div>
+      <small class="text-gray-700 text-base">{{ track.artist }}</small>
+    </div>
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded w-full mb-1" @click="handleClick">
+      Lire
+    </button>
+    <div class="w-ull flex justify-content-between">
+      <Link :href="route('tracks.edit', { track: track })"
+        class="bg-lime-600 hover:bg-lime-700 text-white font-bold rounded py-2 px-4">
+      Modifier
+      </Link>
+      <Link :href="route('tracks.destroy', { track: track })"
+        class="bg-red-600 hover:bg-red-700 text-white font-bold rounded py-2 px-4" as="button" method="delete">
+      Supprimer
+      </Link>
+    </div>
+  </div>
+</template>
+
 <script>
 export default {
-    name: "Track",
-    props: {
-        title: String,
-        artist: String,
-        image: String,
-        music: String
-    },
-    methods: {
-      handclick() {
-        // const url = `storage/tracks/musics/test.wav`;
-        // console.log(url);
-        // let audio = new Audio(url);
-        // audio.play();
-
-        this.$emit('played', this.music);
-      }
+  name: 'Track',
+  emits: ['played'],
+  props: {
+    track: Object,
+  },
+  methods: {
+    handleClick() {
+      this.$emit('played', this.track);
     }
-};
+  }
+}
 </script>
-
-<template>
-    <div class="max-w-sm rounded overflow-hidden shadow-lg cursor-pointer">
-        <div class="w-full">
-          <img src="storage/tracks/images/test.svg" alt=""></div>
-        <div class="px-6 py-4">
-            <div class="font-bold text-xl mb-2">{{ title }}</div>
-            <small class="text-gray-700 text-base" >{{ artist }}</small>
-        </div>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full mb-2"
-        @click="handclick"
-        >Lire</button>
-    </div>
-</template>

@@ -1,74 +1,72 @@
 <template>
   <MusicLayout>
-    <h1>Liste de mes tracks</h1>
-    <input type="search" v-model="filter" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" >
-
+    <template #title>
+      Liste de mes musiques
+    </template>
+    <template #action>
+      <Link :href="route('tracks.create')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded py-2 px-4">
+      Créer une musique
+      </Link>
+    </template>
     <template #content>
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+      <div>
+        <input v-model="filter" type="search"
+          class="shadow border rounded py-2 px-3 text-gray-700 appearance-none leading-tight focus:outline-none focus:shadow-outline mb-5">
 
-            <Track            
-            v-for="track in filteredTracks" 
-            :key="track.uuid" 
-            :title="track.title" 
-            :artist="track.artist"
-            :image="track.image"
-            :music="track.music"
-            @played="play(track.music)"
-            />
-            
-
-    </div>
+        <div class="grid grid-cols-4 gap-4">
+          <Track v-for="track in filteredTracks" :key="track.uuid" :track="track" @played="play" />
+        </div>
+      </div>
     </template>
   </MusicLayout>
 </template>
 
 <script>
-import MusicLayout from '../../Layouts/MusicLayout.vue';
-import Track from '../../Components/Track.vue';
+import MusicLayout from '@/Layouts/MusicLayout.vue';
+import Track from '@/Components/Track/Track.vue';
 
 export default {
-    name: "Index",
-    components: {
-        MusicLayout,
-        Track
-    },
-    props: {
-        tracks: Array,
-    },
-    data() {
-        return {  
-          audio: null,
-          currentTrack: null
-        }
-    },
-    computed: {
-      filteredTracks() {
-        return this.tracks.filter(track => {
-          track.title.toLowerCase().includes(this.filter.toLowerCase()) 
-          || track.artist.toLowerCase().includes(this.filter.toLowerCase());
-        });
-      }
-    },
-    methods: {
-      play(track) {
-        const url = 'storage/' + track.music;
-        if (!this.currentTrack) {
-          this.audio = new Audio(url);
-          this.audio.play();
-        } else if (this.currentTrack !== track.uuid) {
-          this.audio.pause();
-          this.audio.src = url;
-          this.audio.play();
-        }else {
-          this.audio.paused ? this.audio.play() : this.audio.pause();
-        }
-
-        this.currentTrack = track.uuid;
-        this.addeventListener('ended', () => {
-          this.currentTrack = null;
-        });
-
-      }
+  name: 'Index',
+  components: {
+    MusicLayout,
+    Track,
+  },
+  props: {
+    tracks: Array,
+  },
+  data() {
+    return {
+      audio: null,
+      currentTrack: null,
+      filter: '',
     }
-};
+  },
+  computed: {
+    filteredTracks() {
+      return this.tracks.filter(track =>
+        track.title.toLowerCase().includes(this.filter.toLowerCase())
+        || track.artist.toLowerCase().includes(this.filter.toLowerCase())
+      );
+    }
+  },
+  methods: {
+    play(track) {
+      const url = 'storage/' + track.music;
+
+      if (!this.currentTrack) {
+        this.audio = new Audio(url);
+        this.audio.play();
+      } else if (this.currentTrack !== track.uuid) {
+        this.audio.pause();
+        this.audio.src = url;
+        this.audio.play();
+      } else {
+        this.audio.paused ? this.audio.play() : this.audio.pause();
+      }
+
+      this.currentTrack = track.uuid;
+      this.audio.addEventListener('ended', () => this.currentTrack = null);
+    }
+  },
+}
 </script>
